@@ -11,6 +11,7 @@ use super::{
 use crate::descriptor::{EnumDescriptor, TypePath};
 use crate::generator::write_fields_array;
 use crate::resolver::Resolver;
+use std::collections::HashSet;
 use std::io::{Result, Write};
 
 pub fn generate_enum<W: Write>(
@@ -22,9 +23,16 @@ pub fn generate_enum<W: Write>(
 ) -> Result<()> {
     let rust_type = resolver.rust_type(path);
 
+    let mut numbers = HashSet::new();
+
     let variants: Vec<_> = descriptor
         .values
         .iter()
+        .filter(|variant| {
+            // Skip duplicate enum values. Protobuf allows this when the
+            // 'allow_alias' option is set.
+            numbers.insert(variant.number())
+        })
         .map(|variant| {
             let variant_name = variant.name.clone().unwrap();
             let variant_number = variant.number();
