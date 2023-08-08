@@ -11,6 +11,7 @@ repository = "https://github.com/influxdata/pbjson"
 exclude = ["protos/*"]
 
 [dependencies] # In alphabetical order
+base64 = "0.13"
 bytes = "1.0"
 chrono = { version = "0.4", default-features = false, features = ["alloc"] }
 pbjson = { path = "../pbjson", version = "0.5" }
